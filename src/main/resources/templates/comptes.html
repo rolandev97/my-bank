@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorator="~{templates1.html}">
+<head>
+<meta charset="UTF-8">
+<title>Ma Banque</title>
+</head>
+<body>
+	<div layout:fragment="content" id="block">
+		<div class="col-lg-6">
+			<div class="card">
+				<div class="card-header">
+					Consultation d'un compte
+				</div>
+				<div class="card-body">
+					<form th:action="@{/mabanque/consulterCompte}" method="get">
+						<label>Code Cpte:</label>
+						<input type="text" name="codeCompte" th:value="${codeCpte}">
+						<button class="btn btn-default" type="submit">Consulter</button>
+					</form>
+					<div class="text-danger" th:if="${exc}" th:text="${exc.message}">
+						
+					</div>
+				</div>
+			</div>
+			<div class="card" th:if="${compte}">
+				<div class="card-header">
+					Informations sur le compte
+				</div>
+				<div class="card-body">
+					<div>
+						<label>Client:</label>
+						<label th:text="${compte.client.nom}"></label>
+					</div>
+					<div>
+						<label>Code:</label>
+						<label th:text="${compte.codeCompte}"></label>
+					</div>
+					<div>
+						<label>Solde:</label>
+						<label th:text="${compte.solde}"></label>
+					</div>
+					<div>
+						<label>Date creation:</label>
+						<label th:text="${compte.dateCreation}"></label>
+					</div>
+					<div>
+						<label>Type:</label>
+						<label th:text="${compte.class.simpleName}"></label>
+					</div>
+					<div th:if="${compte.class.simpleName=='CompteCourant'}">
+						<label>Decouvert:</label>
+						<label th:text="${compte.decouvert}"></label>
+					</div>
+					<div th:if="${compte.class.simpleName=='CompteEpargne'}">
+						<label>Taux:</label>
+						<label th:text="${compte.taux}"></label>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-6">
+			<div class="card" th:if="${compte}">
+				<div class="card-header">
+					Operation sur le compte
+				</div>
+				<div class="card-body">
+					<form th:action="@{/mabanque/saveOperation}" method="POST">
+						<label>Compte:</label>
+						<input type="text" hidden="hidden" th:value="${codeCpte}" name="codeCpte">
+						<label th:text="${codeCpte}"></label>
+						<div>
+							<input type="radio" name="typeOperation" value="VERS" checked="checked" onchange="document.getElementById('forVirement').style.display='none' ">
+							<label>VERSEMENT</label>
+							<input type="radio" name="typeOperation" value="RETR" onchange="document.getElementById('forVirement').style.display='none' ">
+							<label>RETRAIT</label>
+							<input type="radio" name="typeOperation" value="VIR" onchange="document.getElementById('forVirement').style.display='block' ">
+							<label>VIREMENT</label>
+						</div>
+						<div id="forVirement"  style="display: none;">
+							<label>Vers:</label>
+							<input type="text" name="codeCompte2">
+						</div>
+						<div>
+							<label>Montant</label>
+							<input type="text" name="montant">
+						</div>
+						<div class="text-danger" th:text="${#httpServletRequest.getParameter('error') }">
+							
+						</div>
+						<button type="submit" class="btn btn-default">Effectuer</button>
+					</form>
+				</div>
+			</div>
+			<div class="card" th:if="${compte}">
+				<div class="card-header">
+					Liste des operations
+				</div>
+				<div class="card-body">
+					<table class="table table-striped">
+						<tr>
+							<th>Num</th><th>Type</th><th>Date</th><th>Montant</th>
+						</tr>
+						<tr th:each="o:${listOperation}">
+							<td th:text="${o.numero}"></td>
+							<td th:text="${o.class.simpleName}"></td>
+							<td th:text="${o.dateOperation}"></td>
+							<td th:text="${o.montant}"></td>
+						</tr>
+					</table>
+					<div class="container">
+						<ul class="pagination">
+							<li th:each="p,status:${pages}" class="page-item">
+								<a class="page-link" th:href="@{/mabanque/consulterCompte(codeCompte=${codeCpte},page=${status.index})}" th:text="${status.index}"></a>
+							</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

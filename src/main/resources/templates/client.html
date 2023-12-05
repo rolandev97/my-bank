@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Authentification</title>
+	<link rel="stylesheet" type="text/css" th:href="@{/bootstrap-4.1/bootstrap.min.css}">
+	<link rel="stylesheet" type="text/css" th:href="@{/css/myStyle.css}">
+</head>
+<body>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4 offset-4">
+				<div class="card" id="position">
+					<div class="card-header bg-dark">
+						Ma Banque - Creer un compte
+					</div>
+					<div class="card-body">
+						<form th:action="@{/login}" method="POST">
+							<label>Username</label>
+							<input type="text" name="username">
+							<label>Password</label>
+							<input type="password" name="password">
+							<button type="submit" class="btn btn-dark">Login</button>
+						</form>
+						<div th:if="${param.error}" id="error">
+							Inccorect username or password
+						</div>
+						<div>
+							<a th:href="@{/creerClient}">Creer un compte</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

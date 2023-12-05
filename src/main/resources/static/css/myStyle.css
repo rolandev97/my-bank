@@ -1,0 +1,24 @@
+@charset "UTF-8";
+#block
+{
+	display: flex;
+	margin-top: 20px;
+	height: 700px;
+}
+#block .card
+{
+	margin-bottom: 20px;
+}
+#position
+{
+	top: 100px;
+}
+#position .card-header
+{
+	color: white;
+	text-align: center;
+}
+#error
+{
+	color: red;
+}
